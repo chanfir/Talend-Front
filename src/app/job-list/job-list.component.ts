@@ -17,8 +17,6 @@ export class JobListComponent implements OnInit {
 
 
 
-
-
   ngOnInit() {
 
 
@@ -32,9 +30,6 @@ export class JobListComponent implements OnInit {
 
 
     this.loadJob();
-
-
-
 
   }
 
@@ -121,9 +116,19 @@ export class JobListComponent implements OnInit {
       });
   }
 
-  RunJob() {
+  RunJob(id) {
 
 
+    this.loaderService.display(true );
+    this.jobService.run(id).subscribe(data => {
+
+      this.loaderService.display(false);
+      console.log(data);
+    }, error=> {
+
+      this.loaderService.display(false);
+      console.log(error.message);
+    });
 
   }
 

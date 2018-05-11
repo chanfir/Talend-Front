@@ -1,17 +1,22 @@
 import {Injectable} from "@angular/core";
-import {Http, RequestOptions, Headers} from '@angular/http';
+import {Http, RequestOptions, Headers } from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx'
 import {SearchData} from "../interfaces/searchdata";
+import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
+
 
 let url : string = 'http://localhost:8087/api/job';
 
 @Injectable()
 export class JobService {
 
-    constructor(private http : Http) {}
+      constructor(private http : Http , httpc : HttpClient) {}
 
-    findById(id : string) {
+
+
+
+findById(id : string) {
         return this
             .http
             .get(url + '/' + id)
@@ -33,7 +38,7 @@ export class JobService {
         return this
             .http
             .post(url, job, options)
-            .map(res => res.json())
+          .map(res => res.json())
             .catch(this.handleError);
     }
 
@@ -65,10 +70,35 @@ export class JobService {
             .post(url + '/search', search, options)
             .map(res => res.json())
             .catch(this.handleError);
+        }
+
+
+
+    pushFileToStorage(file: File): Observable<HttpEvent<{}>> {
+      const formdata: FormData = new FormData();
+
+      formdata.append('file', file);
+
+      const req = new HttpRequest('POST', 'http://localhost:8087/api/job/post', formdata, {
+        reportProgress: true,
+        responseType: 'text'
+      });
+
+      return this.http.request(req);
     }
+
 
     handleError(error) {
         return Observable.throw(error.json().error || 'Server error');
     }
 
+  run(id) {
+
+    return this
+      .http
+      .get(url + '/run' + id)
+      .map(res => res.json())
+      .catch(this.handleError);
+
+  }
 }

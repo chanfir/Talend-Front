@@ -3,16 +3,34 @@ import {job} from '../../interfaces/job';
 import {JobService} from '../../services/job.service';
 import {Router} from '@angular/router';
 import {LoaderService} from '../../services/loader.service';
+import {Http} from '@angular/http';
 
-@Component({selector: 'app-job-insert', templateUrl: './job-insert.component.html', styleUrls: ['./job-insert.component.css']})
+import {UploadFileService} from '../../services/upload';
+import {Observable} from 'rxjs/Observable';
+
+
+
+@Component({selector: 'app-job-insert',
+  templateUrl: './job-insert.component.html',
+  styleUrls: ['./job-insert.component.css']})
+
 export class JobInsertComponent implements OnInit {
+
+
+
+
+
 
   job: job;
   showLoader: boolean;
 
-  constructor(private jobService: JobService, private router: Router, private loaderService: LoaderService) {
+
+  constructor(private upload : UploadFileService , private http : Http , private jobService: JobService, private router: Router, private loaderService: LoaderService) {
     this.job = new job();
   }
+
+
+
 
   ngOnInit() {
     this
@@ -22,6 +40,8 @@ export class JobInsertComponent implements OnInit {
         this.showLoader = val;
       });
   }
+
+
 
   saveJob() {
     this
@@ -34,7 +54,9 @@ export class JobInsertComponent implements OnInit {
         this
           .loaderService
           .display(false);
+        console.log('yalay yalalalay');
         console.log(data);
+        console.log("json chbaath");
         this
           .router
           .navigate(['list']);
@@ -46,24 +68,13 @@ export class JobInsertComponent implements OnInit {
       });
   }
 
-  /*handleFileSelect(evt) {
-    var files = evt.target.files;
-    var file = files[0];
 
-    if (files && file) {
-      var reader = new FileReader();
 
-      reader.onload = this
-        .handleReaderLoaded
-        .bind(this);
 
-      reader.readAsBinaryString(file);
-    }
-  }*/
 
-  /*handleReaderLoaded(readerEvt) {
-    var binaryString = readerEvt.target.result;
-    this.candidate.photo = btoa(binaryString);
-    console.log(btoa(binaryString));
-  }*/
+  handleError(error) {
+    return Observable.throw(error.json().error || 'Server error');
+  }
+
+
 }

@@ -9,6 +9,8 @@ import { JobListComponent } from './job-list/job-list.component';
 import { JobInsertComponent } from './job-insert/job-insert.component';
 import {LoaderService} from "../services/loader.service";
 import { JobUpdateComponent } from './job-update/job-update.component';
+import {HttpClient, HttpClientModule, HttpHandler} from '@angular/common/http';
+
 
 
 export const AppRoutes : any = [
@@ -23,10 +25,12 @@ export const AppRoutes : any = [
     AppComponent,
     JobListComponent,
     JobInsertComponent,
-    JobUpdateComponent
+    JobUpdateComponent,
+
   ],
   imports: [
     HttpModule,
+    HttpClientModule,
     FormsModule,
     BrowserModule,
     RouterModule.forRoot(AppRoutes,{useHash: true})
