@@ -4,9 +4,8 @@ import {JobService} from '../../services/job.service';
 import {Router} from '@angular/router';
 import {LoaderService} from '../../services/loader.service';
 import {Http} from '@angular/http';
-
-import {UploadFileService} from '../../services/upload';
 import {Observable} from 'rxjs/Observable';
+import {HttpEventType, HttpResponse} from '@angular/common/http';
 
 
 
@@ -20,12 +19,14 @@ export class JobInsertComponent implements OnInit {
 
 
 
-
+  selectedFiles: FileList;
+  currentFileUpload: File;
+  progress: { percentage: number } = { percentage: 0 };
   job: job;
   showLoader: boolean;
 
 
-  constructor(private upload : UploadFileService , private http : Http , private jobService: JobService, private router: Router, private loaderService: LoaderService) {
+  constructor( private http : Http , private jobService: JobService, private router: Router, private loaderService: LoaderService) {
     this.job = new job();
   }
 
@@ -68,7 +69,25 @@ export class JobInsertComponent implements OnInit {
       });
   }
 
+  selectFile(event) {
+    this.selectedFiles = event.target.files;
+  }
 
+
+  upload() {
+    this.progress.percentage = 0;
+
+    this.currentFileUpload = this.selectedFiles.item(0);
+    this.jobService.pushFileToStorage(this.currentFileUpload).subscribe(event => {
+      if (event.type === HttpEventType.UploadProgress) {
+        this.progress.percentage = Math.round(100 * event.loaded / event.total);
+      } else if (event instanceof HttpResponse) {
+        console.log('File is completely uploaded!');
+      }
+    });
+
+    this.selectedFiles = undefined;
+  }
 
 
 

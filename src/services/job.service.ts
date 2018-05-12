@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Http, RequestOptions, Headers } from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/Rx'
+import 'rxjs/Rx';
 import {SearchData} from "../interfaces/searchdata";
 import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
 
@@ -11,7 +11,7 @@ let url : string = 'http://localhost:8087/api/job';
 @Injectable()
 export class JobService {
 
-      constructor(private http : Http , httpc : HttpClient) {}
+      constructor(private httpc :HttpClient ,private http : Http ) {}
 
 
 
@@ -74,19 +74,18 @@ findById(id : string) {
 
 
 
-    pushFileToStorage(file: File): Observable<HttpEvent<{}>> {
-      const formdata: FormData = new FormData();
+      pushFileToStorage(file: File): Observable<HttpEvent<{}>> {
+        const formdata: FormData = new FormData();
 
-      formdata.append('file', file);
+        formdata.append('file', file);
 
-      const req = new HttpRequest('POST', 'http://localhost:8087/api/job/post', formdata, {
-        reportProgress: true,
-        responseType: 'text'
-      });
+        const req = new HttpRequest('POST', 'http://localhost:8087/api/job/post', formdata, {
+          reportProgress: true,
+          responseType: 'text'
+        });
 
-      return this.http.request(req);
-    }
-
+        return this.httpc.request(req);
+      }
 
     handleError(error) {
         return Observable.throw(error.json().error || 'Server error');
